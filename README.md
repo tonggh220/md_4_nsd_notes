@@ -1,37 +1,16 @@
 # Tedu_NSD
-
-#### 介绍
 云计算第四阶段课程笔记
 
-#### 软件架构
-软件架构说明
+## 讲师介绍
+李欣
+20年一线工作经验，曾在魅力企业网，英才网联、建筑英才网、人民网旗下澳客网担任系统架构师、运维经理等职务，精通 Linux 下服务的配置，大规模集群管理，针对网络架构、系统优化，性能调优有独到见解，擅长使用 shell、python 开发等。
 
+授课风格
+思路清晰，考点把握精准，语言幽默风趣
 
-#### 安装教程
+讲师QQ: 3273252716
+仓库地址 https://gitee.com/luckfurit/Tedu_NSD.git
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 码云特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+## 本阶段所有软件下载地址
+https://pan.baidu.com/s/1xsKK5bwVcGUnTuxbStjIGA 
+提取码:nprh

@@ -14,3 +14,6 @@
 ## 本阶段所有软件下载地址
 https://pan.baidu.com/s/1xsKK5bwVcGUnTuxbStjIGA 
 提取码:nprh
+
+typora 编辑器下载地址
+https://typora.io

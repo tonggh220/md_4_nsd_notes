@@ -95,7 +95,7 @@ es-0001 ... es-0005 所有主机，都要执行以下操作
 192.168.1.45	es-0005
 [root@es-0001 ~]# yum install -y java-1.8.0-openjdk elasticsearch
 [root@es-0001 ~]# vim /etc/elasticsearch/elasticsearch.yml
-17：  cluster.name: nsd2002
+17：  cluster.name: my-es
 23：  node.name: es-0001 # 本机主机名
 54：  network.host: 0.0.0.0
 68：  discovery.zen.ping.unicast.hosts: ["es-0001", "es-0002", "es-0003"]

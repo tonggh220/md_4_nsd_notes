@@ -5,9 +5,18 @@
 ```mermaid
 graph LR
 subgraph web cluster
-  H1[apache] --> F1(filebeat)
-  H2[apache] --> F2(filebeat)
-  H3[apache] --> F3(filebeat)
+  subgraph web1
+    H1[apache] --> F1(filebeat)
+  end
+  subgraph web2
+    H2[apache] --> F2(filebeat)
+  end
+  subgraph web3
+    H3[apache] --> F3(filebeat)
+  end
+  style web1 color:#ff0000,fill:#99ff99
+  style web2 color:#ff0000,fill:#99ff99
+  style web3 color:#ff0000,fill:#99ff99
 end
 F1 --> A1
 F2 --> A1

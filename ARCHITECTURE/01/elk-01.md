@@ -244,3 +244,13 @@ http://公网IP:9200/\_plugin/bigdesk
 绑定弹性公网IP，通过 WEB 浏览器验证
 
 http://弹性公网IP:5601/status
+
+###### 导入日志数据
+
+拷贝云盘 public/elk/logs.jsonl.gz 到跳板机
+
+```shell
+[root@ecs-proxy ~]# gunzip logs.jsonl.gz 
+[root@ecs-proxy ~]# curl -XPOST http://192.168.1.41:9200/_bulk --data-binary @logs.jsonl 
+```
+

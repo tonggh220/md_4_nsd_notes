@@ -101,6 +101,13 @@ es-0001 ... es-0005 所有主机，都要执行以下操作
 68：  discovery.zen.ping.unicast.hosts: ["es-0001", "es-0002", "es-0003"]
 [root@es-0001 ~]# systemctl enable --now elasticsearch
 [root@es-0001 ~]# curl http://192.168.1.41:9200/_cluster/health?pretty
-
+{
+  "cluster_name" : "my-es",
+  "status" : "green",
+  "timed_out" : false,
+  "number_of_nodes" : 5,
+  "number_of_data_nodes" : 5,
+... ...
+}
 ```
 

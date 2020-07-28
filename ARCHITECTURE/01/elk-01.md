@@ -166,11 +166,49 @@ http://公网IP:9200/\_plugin/bigdesk
 [root@es-0001 ~]# curl -XPUT 'http://es-0001:9200/tedu' -d \
 '{
     "settings":{
-        "index":{
-            "number_of_shards": 5, 
-            "number_of_replicas": 1
-        }
+       "index":{
+          "number_of_shards": 5, 
+          "number_of_replicas": 1
+       }
     }
 }'
 ```
 
+###### 增加数据（插入）
+
+```shell
+[root@es-0001 ~]# curl -XPUT 'http://es-0001:9200/tedu/teacher/1' -d \
+'{
+  "职业": "诗人",
+  "名字": "李白",
+  "称号": "诗仙",
+  "年代": "唐"
+}' 
+```
+
+###### 查询数据
+
+```shell\
+[root@es-0001 ~]# curl -XGET http://es-0001:9200/tedu/teacher/1?pretty
+```
+
+###### 修改数据
+
+```shell\
+[root@es-0001 ~]# curl -XPOST http://es-0001:9200/tedu/teacher/1/_update -d '{ 
+    "doc": {
+        "年代": "公元701"
+    }
+}'
+```
+
+###### 删除数据
+
+```shell
+# 删除一条
+[root@es-0001 ~]# curl -XDELETE http://es-0001:9200/tedu/teacher/1
+# 删除索引
+[root@es-0001 ~]# curl -XDELETE http://es-0001:9200/tedu
+# 删除所有
+[root@es-0001 ~]# curl -XDELETE http://es-0001:9200/*
+```

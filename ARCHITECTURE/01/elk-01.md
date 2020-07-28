@@ -4,14 +4,14 @@
 
 ```mermaid
 graph LR
-subgraph webserver1
+subgraph web cluster
   H1[apache] --> F1(filebeat)
-end
-subgraph webserver2
   H2[apache] --> F2(filebeat)
+  H3[apache] --> F3(filebeat)
 end
 F1 --> A1
 F2 --> A1
+F3 --> A1
 subgraph Logstash
   A1(input) --> A2(filter) --> A3(output)
 end
@@ -36,7 +36,7 @@ ES5 --> K
 
 
 
-## Elasticsearch 安装
+#### Elasticsearch 安装
 
 ###### 在跳板机上配置 yum 仓库
 

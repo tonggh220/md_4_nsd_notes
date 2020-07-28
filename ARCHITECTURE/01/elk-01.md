@@ -141,3 +141,36 @@ http://公网IP:9200/\_plugin/kopf
 http://公网IP:9200/\_plugin/head
 http://公网IP:9200/\_plugin/bigdesk
 
+#### Elasticsearch基本操作
+
+###### 查询_cat方法
+
+```shell
+# 查询支持的关键字
+[root@ecs-proxy ~]# curl -XGET http://192.168.1.41:9200/_cat/
+# 查具体的信息
+[root@ecs-proxy ~]# curl -XGET http://192.168.1.41:9200/_cat/master
+# 显示详细信息 ?v
+[root@ecs-proxy ~]# curl -XGET http://192.168.1.41:9200/_cat/master?v
+# 显示帮助信息 ?help
+[root@ecs-proxy ~]# curl -XGET http://192.168.1.41:9200/_cat/master?help
+```
+
+###### 创建索引
+
+指定索引的名称，指定分片数量，指定副本数量
+
+创建索引使用 PUT 方法，创建完成以后通过 head 插件验证
+
+```shell
+[root@es-0001 ~]# curl -XPUT 'http://es-0001:9200/tedu' -d \
+'{
+    "settings":{
+        "index":{
+            "number_of_shards": 5, 
+            "number_of_replicas": 1
+        }
+    }
+}'
+```
+

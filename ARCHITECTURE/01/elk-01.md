@@ -243,4 +243,4 @@ http://公网IP:9200/\_plugin/bigdesk
 
 绑定弹性公网IP，通过 WEB 浏览器验证
 
-http://弹性公网IP:5601/
+http://弹性公网IP:5601/status

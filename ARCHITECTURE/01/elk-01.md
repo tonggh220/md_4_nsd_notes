@@ -107,7 +107,37 @@ es-0001 ... es-0005 所有主机，都要执行以下操作
   "timed_out" : false,
   "number_of_nodes" : 5,
   "number_of_data_nodes" : 5,
-... ...
+   ... ...
 }
 ```
+
+###### 插件安装
+
+拷贝云盘 public/elk 目录到跳板机
+
+```shell
+# 本地安装，拷贝 bigdesk 插件文件到 es-0005
+[root@es-0005 ~]# /usr/share/elasticsearch/bin/plugin install file:///root/bigdesk-master.zip 
+[root@es-0005 ~]# /usr/share/elasticsearch/bin/plugin list
+Installed plugins in /usr/share/elasticsearch/plugins:
+    - bigdesk
+# 远程安装，把插件拷贝到跳板机的ftp目录下
+[root@es-0005 ~]# /usr/share/elasticsearch/bin/plugin install ftp://192.168.1.252/public/elk/elasticsearch-kopf-master.zip
+[root@es-0005 ~]# /usr/share/elasticsearch/bin/plugin install ftp://192.168.1.252/public/elk/elasticsearch-head-master.zip
+[root@es-0005 ~]# /usr/share/elasticsearch/bin/plugin list
+Installed plugins in /usr/share/elasticsearch/plugins:
+    - head
+    - bigdesk
+    - kopf
+```
+
+访问插件：
+
+1、华为云绑定弹性公网IP给 es-0005 节点
+
+2、http://弹性公网IP:9200/_plugin/插件名称  [bigdesk|head|kopf]
+
+http://公网IP:9200/_plugin/kopf
+http://公网IP:9200/_plugin/head
+http://公网IP:9200/_plugin/bigdesk
 

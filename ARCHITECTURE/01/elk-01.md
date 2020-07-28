@@ -48,7 +48,7 @@ ES5 --> K
 [root@ecs-proxy localrepo]# createrepo --update .
 ```
 
-###### 购买 5 台云主机 
+###### 购买云主机 
 
 | 主机    | IP地址       | 配置          |
 | ------- | ------------ | ------------- |
@@ -147,13 +147,13 @@ http://公网IP:9200/\_plugin/bigdesk
 
 ```shell
 # 查询支持的关键字
-[root@ecs-proxy ~]# curl -XGET http://192.168.1.41:9200/_cat/
+[root@es-0001 ~]# curl -XGET http://es-0001:9200/_cat/
 # 查具体的信息
-[root@ecs-proxy ~]# curl -XGET http://192.168.1.41:9200/_cat/master
+[root@es-0001 ~]# curl -XGET http://es-0001:9200/_cat/master
 # 显示详细信息 ?v
-[root@ecs-proxy ~]# curl -XGET http://192.168.1.41:9200/_cat/master?v
+[root@es-0001 ~]# curl -XGET http://es-0001:9200/_cat/master?v
 # 显示帮助信息 ?help
-[root@ecs-proxy ~]# curl -XGET http://192.168.1.41:9200/_cat/master?help
+[root@es-0001 ~]# curl -XGET http://es-0001:9200/_cat/master?help
 ```
 
 ###### 创建索引
@@ -163,7 +163,7 @@ http://公网IP:9200/\_plugin/bigdesk
 创建索引使用 PUT 方法，创建完成以后通过 head 插件验证
 
 ```shell
-[root@es-0001 ~]# curl -XPUT 'http://es-0001:9200/tedu' -d \
+[root@es-0001 ~]# curl -XPUT http://es-0001:9200/tedu -d \
 '{
     "settings":{
        "index":{
@@ -174,10 +174,10 @@ http://公网IP:9200/\_plugin/bigdesk
 }'
 ```
 
-###### 增加数据（插入）
+###### 增加数据
 
 ```shell
-[root@es-0001 ~]# curl -XPUT 'http://es-0001:9200/tedu/teacher/1' -d \
+[root@es-0001 ~]# curl -XPUT http://es-0001:9200/tedu/teacher/1 -d \
 '{
   "职业": "诗人",
   "名字": "李白",
@@ -212,3 +212,33 @@ http://公网IP:9200/\_plugin/bigdesk
 # 删除所有
 [root@es-0001 ~]# curl -XDELETE http://es-0001:9200/*
 ```
+
+#### kibana安装
+
+###### 购买云主机 
+
+| 主机   | IP地址       | 配置          |
+| ------ | ------------ | ------------- |
+| kibana | 192.168.1.46 | 最低配置1核1G |
+
+###### 安装kibana
+
+```shell
+[root@kibana ~]# vim /etc/hosts
+192.168.1.41	es-0001
+192.168.1.42	es-0002
+192.168.1.43	es-0003
+192.168.1.44	es-0004
+192.168.1.45	es-0005
+192.168.1.46	kibana
+[root@kibana ~]# yum install -y kibana
+[root@kibana ~]# vim /opt/kibana/config/kibana.yml
+02  server.port: 5601
+05  server.host: "0.0.0.0"
+15  elasticsearch.url: "http://es-0001:9200"
+23  kibana.index: ".kibana"
+26  kibana.defaultAppId: "discover"
+[root@kibana ~]# systemctl enable --now kibana
+```
+
+绑定弹性公网IP，通过 WEB 浏览器验证

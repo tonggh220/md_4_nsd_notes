@@ -50,8 +50,13 @@ ES5 --> K
 
 ###### 购买 5 台云主机 
 
-1核1G即可 (es-0001 ... es-0005)
-192.168.1.41  ... 192.168.1.45
+| 主机    | IP地址       | 配置          |
+| ------- | ------------ | ------------- |
+| es-0001 | 192.168.1.41 | 最低配置1核1G |
+| es-0002 | 192.168.1.42 | 最低配置1核1G |
+| es-0003 | 192.168.1.43 | 最低配置1核1G |
+| es-0004 | 192.168.1.44 | 最低配置1核1G |
+| es-0005 | 192.168.1.45 | 最低配置1核1G |
 
 ###### 单机安装
 
@@ -75,5 +80,27 @@ ES5 --> K
   },
   "tagline" : "You Know, for Search"
 }
+```
+
+###### 集群安装
+
+es-0001 ... es-0005 所有主机，都要执行以下操作
+
+```shell
+[root@es-0001 ~]# vim /etc/hosts
+192.168.1.41	es-0001
+192.168.1.42	es-0002
+192.168.1.43	es-0003
+192.168.1.44	es-0004
+192.168.1.45	es-0005
+[root@es-0001 ~]# yum install -y java-1.8.0-openjdk elasticsearch
+[root@es-0001 ~]# vim /etc/elasticsearch/elasticsearch.yml
+17：  cluster.name: nsd2002
+23：  node.name: es-0001 # 本机主机名
+54：  network.host: 0.0.0.0
+68：  discovery.zen.ping.unicast.hosts: ["es-0001", "es-0002", "es-0003"]
+[root@es-0001 ~]# systemctl enable --now elasticsearch
+[root@es-0001 ~]# curl http://192.168.1.41:9200/_cluster/health?pretty
+
 ```
 

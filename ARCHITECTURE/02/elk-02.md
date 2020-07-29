@@ -105,3 +105,27 @@ output{
 [root@logstash ~]# /opt/logstash/bin/logstash -f /etc/logstash/logstash.conf
 ```
 
+官方手册地址
+
+https://www.elastic.co/guide/en/logstash/current/index.html
+
+###### input之file插件
+
+```shell
+[root@logstash ~]# vim /etc/logstash/logstash.conf
+input { 
+  file {
+    path => ["/tmp/c.log"]
+    type => "test"
+    start_position => "beginning"
+    sincedb_path => "/var/lib/logstash/sincedb"
+  }
+}
+filter{ }
+output{ 
+  stdout{ codec => "rubydebug" }
+}
+[root@logstash ~]# rm -rf /root/.sincedb_*
+[root@logstash ~]# /opt/logstash/bin/logstash -f /etc/logstash/logstash.conf
+```
+

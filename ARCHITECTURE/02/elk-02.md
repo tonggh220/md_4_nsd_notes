@@ -50,4 +50,28 @@ ES5 --> K
 | 主机     | IP地址       | 配置          |
 | -------- | ------------ | ------------- |
 | logstash | 192.168.1.47 | 最低配置2核2G |
+| web      | 192.168.1.48 | 最低配置1核1G |
+
+###### web云主机安装
+
+```shell
+[root@web ~]# yum install -y httpd
+[root@web ~]# systemctl enable --now httpd
+[root@web ~]# echo "hello world" >/var/www/html/info.html
+[root@web ~]# curl http://192.168.1.48/info.html
+```
+
+###### logstash云主机安装
+
+```shell
+[root@logstash ~]# vim /etc/hosts
+192.168.1.41	es-0001
+192.168.1.42	es-0002
+192.168.1.43	es-0003
+192.168.1.44	es-0004
+192.168.1.45	es-0005
+192.168.1.47	logstash
+[root@logstash ~]# yum install -y java-1.8.0-openjdk logstash
+[root@logstash ~]# touch /etc/logstash/logstash.conf
+```
 

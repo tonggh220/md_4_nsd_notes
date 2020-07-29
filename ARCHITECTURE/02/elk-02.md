@@ -75,3 +75,33 @@ ES5 --> K
 [root@logstash ~]# touch /etc/logstash/logstash.conf
 ```
 
+###### 基础配置样例
+
+```shell
+[root@logstash ~]# vim /etc/logstash/logstash.conf
+input { 
+  stdin {}
+}
+filter{ }
+output{ 
+  stdout{}
+}
+[root@logstash ~]# /opt/logstash/bin/logstash -f /etc/logstash/logstash.conf
+```
+
+###### 插件与调试格式
+
+使用json格式字符串测试  {"a":"1", "b":"2","c":"3"}
+
+```shell
+[root@logstash ~]# vim /etc/logstash/logstash.conf
+input { 
+  stdin { codec => "json" }
+}
+filter{ }
+output{ 
+  stdout{ codec => "rubydebug" }
+}
+[root@logstash ~]# /opt/logstash/bin/logstash -f /etc/logstash/logstash.conf
+```
+

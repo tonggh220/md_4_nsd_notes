@@ -109,7 +109,7 @@ output{
 
 https://www.elastic.co/guide/en/logstash/current/index.html
 
-###### input之file插件
+###### input file插件
 
 ```shell
 [root@logstash ~]# vim /etc/logstash/logstash.conf
@@ -127,5 +127,153 @@ output{
 }
 [root@logstash ~]# rm -rf /root/.sincedb_*
 [root@logstash ~]# /opt/logstash/bin/logstash -f /etc/logstash/logstash.conf
+```
+
+###### filter grok插件
+
+正则表达式分组匹配格式: (?<名字>正则表达式)
+
+正则表达式宏调用格式:     %{宏名称:名字}
+
+宏文件路径 
+
+/opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-patterns-core-2.0.5/patterns/grok-patterns
+
+```shell
+[root@logstash ~]# echo '192.168.1.252 - - [29/Jul/2020:14:06:57 +0800] "GET /info.html HTTP/1.1" 200 119 "-" "curl/7.29.0"' >/tmp/c.log
+[root@logstash ~]# vim /etc/logstash/logstash.conf
+input { 
+  file {
+    path => ["/tmp/c.log"]
+    type => "test"
+    start_position => "beginning"
+    sincedb_path => "/dev/null"
+  }
+}
+filter{ 
+  grok {
+    match => { "message" => "%{COMBINEDAPACHELOG}" }
+  }
+}
+output{ 
+  stdout{ codec => "rubydebug" }
+}
+[root@logstash ~]# /opt/logstash/bin/logstash -f /etc/logstash/logstash.conf
+```
+
+###### output elasticsearch插件
+
+```shell
+[root@logstash ~]# vim /etc/logstash/logstash.conf
+input { 
+  file {
+    path => ["/tmp/c.log"]
+    type => "test"
+    start_position => "beginning"
+    sincedb_path => "/dev/null"
+  }
+}
+filter{ 
+  grok {
+    match => { "message" => "%{COMBINEDAPACHELOG}" }
+  }
+}
+output{ 
+  stdout{ codec => "rubydebug" }
+  elasticsearch {
+    hosts => ["es-0001:9200", "es-0002:9200", "es-0003:9200"]
+    index => "weblog"
+  }
+}
+[root@logstash ~]# curl -XDELETE http://es-0001:9200/*
+[root@logstash ~]# /opt/logstash/bin/logstash -f /etc/logstash/logstash.conf
+```
+
+浏览器打开 head 插件，通过 web 页面浏览验证
+http://公网IP:9200/_plugin/head/
+
+#### filebeat配置
+
+###### web服务安装filebeat
+
+```shell
+[root@web ~]# yum install -y filebeat
+[root@web ~]# vim /etc/filebeat/filebeat.yml
+15:    - /var/log/httpd/access_log
+72:    document_type: apache_log
+183:  #注释掉该行
+188:   #注释掉该行
+278： logstash:
+280：   hosts: ["192.168.1.47:5044"]
+[root@web ~]# grep -Pv "^\s*(#|$)" /etc/filebeat/filebeat.yml
+[root@web ~]# systemctl enable --now filebeat
+```
+
+###### logstash beats插件
+
+```shell
+[root@logstash ~]# vim /etc/logstash/logstash.conf
+input { 
+  file {
+    path => ["/tmp/c.log"]
+    type => "test"
+    start_position => "beginning"
+    sincedb_path => "/var/lib/logstash/sincedb"
+  }
+  beats {
+    port => 5044
+  }
+}
+filter{ 
+  grok {
+    match => { "message" => "%{COMBINEDAPACHELOG}" }
+  }
+}
+output{ 
+  stdout{ codec => "rubydebug" }
+  elasticsearch {
+    hosts => ["es-0001:9200", "es-0002:9200", "es-0003:9200"]
+    index => "weblog"
+  }
+}
+[root@logstash ~]# /opt/logstash/bin/logstash -f /etc/logstash/logstash.conf
+```
+
+访问 web 页面，浏览器打开 head 插件，通过 web 页面浏览验证
+
+#### 网站日志分析实战
+
+1、停止 kibana 服务
+```shell
+[root@kibana ~]# systemctl stop kibana
+```
+2、清空 elasticsearch 中所有数据 
+
+```shell
+[root@kibana ~]# curl -XDELETE http://es-0001:9200/*
+```
+3、配置 web 日志，获取用户真实IP
+   通过 ELB 把 web 服务发布公网
+   https://support.huaweicloud.com/elb_faq/elb_faq_0090.html
+
+4、配置 filebeat
+   详见配置文件 filebeat.yml
+   重启服务
+
+```shell
+[root@web ~]# systemctl stop filebeat
+```
+5、配置 logstash
+   详见配置文件 logstash.conf
+   启动服务
+
+```shell
+[root@logstash ~]# /opt/logstash/bin/logstash -f /etc/logstash/logstash.conf
+```
+6、配置 kibana
+   启动服务，通过web页面配置 kibana
+
+```shell
+[root@kibana ~]# systemctl start kibana
 ```
 

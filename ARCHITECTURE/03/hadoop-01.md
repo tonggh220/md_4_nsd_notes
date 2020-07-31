@@ -147,7 +147,7 @@ node-0003
 </configuration>
 ```
 
-5、启动验证集群 [以下操作仅在 hadoop1 上执行]
+5、启动集群 [以下操作仅在 hadoop1 上执行]
 
 ```shell
 [root@hadoop1 ~]# for i in node-{0001..0003};do
@@ -214,5 +214,30 @@ M1 --> N3
         <value>mapreduce_shuffle</value>
     </property>
 </configuration>
+```
+
+启动集群 [以下操作仅在 hadoop1 上执行]
+
+```shell
+[root@hadoop1 ~]# for i in node-{0001..0003};do
+                    rsync -avXSH --delete /usr/local/hadoop/etc  ${i}:/usr/local/hadoop/
+                  done
+[root@hadoop1 ~]# /usr/local/hadoop/sbin/start-yarn.sh
+```
+
+验证集群
+
+```shell
+[root@hadoop1 ~]# for i in hadoop1 node-{0001..0003};do  
+                      echo ${i}; 
+                      ssh ${i} jps; 
+                      echo -e "\n"; 
+                  done
+[root@hadoop1 ~]# /usr/local/hadoop/bin/yarn node -list
+Total Nodes:3
+ Node-Id             Node-State Node-Http-Address       Number-of-Running-Containers
+ node-0003:33212     RUNNING    node-0003:8042                                  0
+ node-0001:40201     RUNNING    node-0001:8042                                  0
+ node-0002:38830     RUNNING    node-0002:8042                                  0
 ```
 

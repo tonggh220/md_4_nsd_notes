@@ -12,18 +12,20 @@
 
 ###### hadoop安装
 
+拷贝云盘 public/hadoop/hadoop-2.7.7.tar.gz 到 hadoop1 上
+
 ```shell
 [root@hadoop1 ~]# yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel
 [root@hadoop1 ~]# tar -zxf hadoop-2.7.7.tar.gz
 [root@hadoop1 ~]# mv hadoop-2.7.7 /usr/local/hadoop
 [root@hadoop1 ~]# chown -R 0.0 /usr/local/hadoop
-[root@hadoop1 ~]# vim /etc/hosts
-192.168.1.50	hadoop1
 ```
 
-###### JAVA运行环境
+###### 配置JAVA运行环境
 
 ```shell
+[root@hadoop1 ~]# vim /etc/hosts
+192.168.1.50	hadoop1
 [root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/hadoop-env.sh
 25:  export JAVA_HOME="java-1.8.0-openjdk安装路径"
 33:  export HADOOP_CONF_DIR="/usr/local/hadoop/etc/hadoop"

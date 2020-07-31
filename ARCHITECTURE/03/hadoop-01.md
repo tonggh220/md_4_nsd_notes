@@ -241,3 +241,14 @@ Total Nodes:3
  node-0002:38830     RUNNING    node-0002:8042                                  0
 ```
 
+web页面访问
+
+namenode:  http://hadoop1:50070
+
+secondarynamenode:  http://hadoop1:50090
+
+resourcemanager:  http://hadoop1:8088
+
+datanode:  http://node-0001:50075
+
+nodemanager:  http://node-0001:8042

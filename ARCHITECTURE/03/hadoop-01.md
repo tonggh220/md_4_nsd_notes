@@ -168,40 +168,23 @@ node-0003
                   done
 [root@hadoop1 ~]# /usr/local/hadoop/bin/hdfs dfsadmin -report
 ... ...
-
 -------------------------------------------------
 Live datanodes (3):
 ```
 
+###### mapreduce部署
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```xml
+[root@hadoop1 ~]# cd /usr/local/hadoop/etc/hadoop/
+[root@hadoop1 hadoop]# cp mapred-site.xml.template mapred-site.xml
+[root@hadoop1 hadoop]# vim mapred-site.xml
+<configuration>
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+    </property>
+</configuration>
+```
 
 ###### YARN架构图
 
@@ -214,5 +197,22 @@ N3(node-0003<br><font color=0000ff>DataNode</font><br><font color=ff0000>NodeMan
 M1 --> N1
 M1 --> N2
 M1 --> N3
+```
+
+###### Yarn部署
+
+```xml
+[root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/yarn-site.xml
+<configuration>
+    <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>hadoop1</value>
+    </property>
+<!-- Site specific YARN configuration properties -->
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+</configuration>
 ```
 

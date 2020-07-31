@@ -147,11 +147,33 @@ node-0003
 </configuration>
 ```
 
-5、启动验证集群
+5、启动验证集群 [以下操作仅在 hadoop1 上执行]
 
 ```shell
-[root@hadoop1 ~]# 
+[root@hadoop1 ~]# for i in node-{0001..0003};do
+                      rsync -aXSH --delete /usr/local/hadoop ${i}:/usr/local/
+                  done
+[root@hadoop1 ~]# mkdir /var/hadoop
+[root@hadoop1 ~]# /usr/local/hadoop/bin/hdfs namenode -format
+[root@hadoop1 ~]# /usr/local/hadoop/sbin/start-dfs.sh
 ```
+
+6、验证集群配置
+
+```shell
+[root@hadoop1 ~]# for i in hadoop1 node-{0001..0003};do  
+                      echo ${i}; 
+                      ssh ${i} jps; 
+                      echo -e "\n"; 
+                  done
+[root@hadoop1 ~]# /usr/local/hadoop/bin/hdfs dfsadmin -report
+... ...
+
+-------------------------------------------------
+Live datanodes (3):
+```
+
+
 
 
 

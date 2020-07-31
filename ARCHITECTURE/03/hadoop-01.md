@@ -53,6 +53,19 @@
 | node-0002 | 192.168.1.52 | 最低配置2核2G |
 | node-0003 | 192.168.1.53 | 最低配置2核2G |
 
+###### HDFS架构图
+
+```mermaid
+graph TB
+M1(hadoop1<br><font color=ff0000>NameNode<br>SecondaryNamenode</font>) 
+N1(node-0001<br><font color=ff0000>Datanode</font>)
+N2(node-0002<br><font color=ff0000>Datanode</font>)
+N3(node-0003<br><font color=ff0000>Datanode</font>)
+M1 --> N1
+M1 --> N2
+M1 --> N3
+```
+
 ###### HDFS部署
 
 以下操作所有机器都要执行
@@ -78,5 +91,106 @@
                   done
 ```
 
+配置文件语法格式 -- [官方手册](http://hadoop.apache.org/docs/r2.7.7/)
 
+```xml
+    <property>
+        <name></name>
+        <value></value>
+    </property>
+```
+
+1、配置 hadoop-env.sh 参考 配置JAVA运行环境 案例
+
+2、配置slaves
+
+```shell
+[root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/slaves
+node-0001
+node-0002
+node-0003
+```
+
+3、配置core-site.xml
+
+```xml
+[root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/core-site.xml
+<configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://hadoop1:9000</value>
+    </property>
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/var/hadoop</value>
+    </property>
+</configuration>
+```
+
+4、配置hdfs-site.xml
+
+```xml
+[root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/hdfs-site.xml
+<configuration>
+    <property>
+        <name>dfs.namenode.http-address</name>
+        <value>hadoop1:50070</value>
+    </property>
+    <property>
+        <name>dfs.namenode.secondary.http-address</name>
+        <value>hadoop1:50090</value>
+    </property>
+    <property>
+        <name>dfs.replication</name>
+        <value>2</value>
+    </property>
+</configuration>
+```
+
+5、启动验证集群
+
+```shell
+[root@hadoop1 ~]# 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###### YARN架构图
+
+```mermaid
+graph TB
+M1(hadoop1<br><font color=0000ff>namenode<br>secondarynamenode</font><br><font color=ff0000>ResourceManager</font>) 
+N1(node-0001<br><font color=0000ff>DataNode</font><br><font color=ff0000>NodeManager</font>)
+N2(node-0002<br><font color=0000ff>DataNode</font><br><font color=ff0000>NodeManager</font>)
+N3(node-0003<br><font color=0000ff>DataNode</font><br><font color=ff0000>NodeManager</font>)
+M1 --> N1
+M1 --> N2
+M1 --> N3
+```
 

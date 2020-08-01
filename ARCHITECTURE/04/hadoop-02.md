@@ -201,6 +201,15 @@ Live datanodes (3):
 ###### NFS网关服务
 
 ```shell
+[root@nfsgw ~]# yum remove -y rpcbind nfs-utils
+[root@nfsgw ~]# vim /etc/hosts
+192.168.1.50    hadoop1
+192.168.1.51    node-0001
+192.168.1.52    node-0002
+192.168.1.53    node-0003
+192.168.1.55    nfsgw
+[root@nfsgw ~]# yum install -y java-1.8.0-openjdk-devel
+[root@nfsgw ~]# rsync -aXSH --delete hadoop1:/usr/local/hadoop /usr/local/
 
 ```
 

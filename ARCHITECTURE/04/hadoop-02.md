@@ -114,7 +114,68 @@ Total Nodes:4
 [root@newnode ~]# /usr/local/hadoop/sbin/yarn-daemon.sh stop nodemanager
 ```
 
+#### NFS网关
 
+###### NFS网关架构图
 
+```mermaid
+graph RL
+subgraph HDFS集群
+  style HDFS集群 color:#ff0000,fill:#aaccff
+  N1(namenode)
+  D1(datanode)
+  D2(datanode)
+  D3(datanode)
+  N1 === D1
+  N1 === D2
+  N1 === D3
+end
+subgraph NFS网关
+  style NFS网关 color:#ff0000,fill:#22ff66
+  S1(HDFS客户端)
+  S2(NFS服务)
+  S2 --> S1
+end
+S1 --> N1
+S1 -.-> D1
+S1 -.-> D2
+S1 -.-> D3
+C((客户端)) -->|mount| S2
+```
 
+###### 购买云主机 
+
+| 主机  | IP地址       | 配置          |
+| ----- | ------------ | ------------- |
+| nfsgw | 192.168.1.55 | 最低配置1核1G |
+
+###### HDFS用户授权
+
+hadoop1与nfsgw都要添加用户
+
+```shell
+[root@hadoop1 ~]# groupadd -g 800 nfsuser
+[root@hadoop1 ~]# useradd  -g 800 -u 800 -r -d /var/hadoop nfsuser
+#----------------------------------------------------------------------------------------
+[root@nfsgw ~]# groupadd -g 800 nfsuser
+[root@nfsgw ~]# useradd  -g 800 -u 800 -r -d /var/hadoop nfsuser
+```
+
+###### HDFS集群授权
+
+```shell
+
+```
+
+###### NFS网关服务
+
+```shell
+
+```
+
+###### mount验证
+
+```shell
+
+```
 

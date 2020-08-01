@@ -247,6 +247,7 @@ Live datanodes (3):
 [root@nfsgw hadoop]# jps
 1376 Portmap
 1416 Jps
+[root@nfsgw hadoop]# rm -rf /tmp/.hdfs-nfs
 [root@nfsgw hadoop]# sudo -u nfsuser ./sbin/hadoop-daemon.sh --script ./bin/hdfs start nfs3
 [root@nfsgw hadoop]# sudo -u nfsuser jps
 1452 Nfs3

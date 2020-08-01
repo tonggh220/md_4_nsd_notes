@@ -210,7 +210,47 @@ Live datanodes (3):
 192.168.1.55    nfsgw
 [root@nfsgw ~]# yum install -y java-1.8.0-openjdk-devel
 [root@nfsgw ~]# rsync -aXSH --delete hadoop1:/usr/local/hadoop /usr/local/
-
+[root@nfsgw ~]# vim /usr/local/hadoop/etc/hadoop/hdfs-site.xml
+<configuration>
+    <property>
+        <name>dfs.namenode.http-address</name>
+        <value>hadoop1:50070</value>
+    </property>
+    <property>
+        <name>dfs.namenode.secondary.http-address</name>
+        <value>hadoop1:50090</value>
+    </property>
+    <property>
+        <name>dfs.replication</name>
+        <value>2</value>
+    </property>
+    <property>
+        <name>dfs.hosts.exclude</name>
+        <value>/usr/local/hadoop/etc/hadoop/exclude</value>
+    </property>
+    <property>
+        <name>nfs.exports.allowed.hosts</name>
+        <value>* rw</value>
+    </property>
+    <property>
+        <name>nfs.dump.dir</name>
+        <value>/var/nfstmp</value>
+    </property>
+</configuration>
+[root@nfsgw ~]# mkdir /var/nfstmp
+[root@nfsgw ~]# chown nfsuser.nfsuser /var/nfstmp
+[root@nfsgw ~]# rm -rf /usr/local/hadoop/logs/*
+[root@nfsgw ~]# setfacl -m user:nfsuser:rwx /usr/local/hadoop/logs
+[root@nfsgw ~]# getfacl /usr/local/hadoop/logs
+[root@nfsgw ~]# cd /usr/local/hadoop/
+[root@nfsgw hadoop]# ./sbin/hadoop-daemon.sh --script ./bin/hdfs start portmap
+[root@nfsgw hadoop]# jps
+1376 Portmap
+1416 Jps
+[root@nfsgw hadoop]# sudo -u nfsuser ./sbin/hadoop-daemon.sh --script ./bin/hdfs start nfs3
+[root@nfsgw hadoop]# sudo -u nfsuser jps
+1452 Nfs3
+1502 Jps
 ```
 
 ###### mount验证

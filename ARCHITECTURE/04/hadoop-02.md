@@ -87,5 +87,34 @@ Live datanodes (4):
 Total Nodes:4
 ```
 
+###### 删除节点
+
+配置数据迁移 hdfs-site.xml（hadoop1上做，不需要同步）
+
+```xml    <property>
+[root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/hdfs-site.xml
+    <property>
+        <name>dfs.hosts.exclude</name>
+        <value>/usr/local/hadoop/etc/hadoop/exclude</value>
+    </property>
+```
+配置排除主机列表，并迁移数据(hadoop1上执行)
+
+```shell
+# 在删除配置文件中添加 newnode
+[root@hadoop1 ~]# echo newnode >/usr/local/hadoop/etc/hadoop/exclude
+# 迁移数据
+[root@hadoop1 ~]# /usr/local/hadoop/bin/hdfs dfsadmin -refreshNodes
+# 查看状态，仅当节点状态为 Decommissioned 时候才可以下线
+[root@hadoop1 ~]# /usr/local/hadoop/bin/hdfs dfsadmin -report
+```
+下线节点（newnode执行）
+```shell
+[root@newnode ~]# /usr/local/hadoop/sbin/hadoop-daemon.sh stop datanode
+[root@newnode ~]# /usr/local/hadoop/sbin/yarn-daemon.sh stop nodemanager
+```
+
+
+
 
 

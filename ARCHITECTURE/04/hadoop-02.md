@@ -164,7 +164,38 @@ hadoop1与nfsgw都要添加用户
 ###### HDFS集群授权
 
 ```shell
-
+[root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/core-site.xml
+<configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://hadoop1:9000</value>
+    </property>
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/var/hadoop</value>
+    </property>
+    <property>
+        <name>hadoop.proxyuser.nfsuser.groups</name>
+        <value>*</value>
+    </property>
+    <property>
+        <name>hadoop.proxyuser.nfsuser.hosts</name>
+        <value>*</value>
+    </property>
+</configuration>
+[root@hadoop1 ~]# /usr/local/hadoop/sbin/stop-all.sh
+[root@hadoop1 ~]# for i in node-{0001..0003};do
+                      rsync -avXSH /usr/local/hadoop/etc ${i}:/usr/local/hadoop/
+                  done
+[root@hadoop1 ~]# /usr/local/hadoop/sbin/start-dfs.sh
+[root@hadoop1 ~]# jps
+5925 NameNode
+6122 SecondaryNameNode
+6237 Jps
+[root@hadoop1 ~]# /usr/local/hadoop/bin/hdfs dfsadmin -report
+... ...
+-------------------------------------------------
+Live datanodes (3):
 ```
 
 ###### NFS网关服务

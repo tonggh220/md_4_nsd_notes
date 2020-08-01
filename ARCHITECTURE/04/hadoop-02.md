@@ -256,6 +256,13 @@ Live datanodes (3):
 ###### mount验证
 
 ```shell
-
+[root@newnode ~]# yum install -y nfs-utils
+[root@newnode ~]# showmount -e 192.168.1.55
+Export list for 192.168.1.55:
+/ *
+[root@newnode ~]# mount -t nfs -o vers=3,proto=tcp,nolock,noacl,noatime,sync 192.168.1.55:/ /mnt/
+[root@newnode ~]# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+192.168.1.55:/  118G   15G  104G  13% /mnt
 ```
 

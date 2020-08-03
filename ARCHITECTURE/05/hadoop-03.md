@@ -121,7 +121,22 @@ imok
 
 ```mermaid
 graph TB
-namenode
+NN1(hadoop1<br><font color=ff0000>NameNode<br>ResourceManager<br>DFSZKFailoverController</font>)
+NN2(hadoop2<br><font color=ff0000>NameNode<br>ResourceManager<br>DFSZKFailoverController</font>)
+D1(node-0001<br><font color=ff0000>DataNode<br>NodeManager<br>JournalNode<br>QuorumPeerMain</font>)
+D2(node-0002<br><font color=ff0000>DataNode<br>NodeManager<br>JournalNode<br>QuorumPeerMain</font>)
+D3(node-0003<br><font color=ff0000>DataNode<br>NodeManager<br>JournalNode<br>QuorumPeerMain</font>)
+style NN1 fill:#55ff55
+style NN2 fill:#aaaaaa
+style D1 fill:#10a0f0
+style D2 fill:#10a0f0
+style D3 fill:#10a0f0
+NN1 === D1
+NN1 === D2
+NN1 === D3
+NN2 -.- D1
+NN2 -.- D2
+NN2 -.- D3
 ```
 
 购买云主机
@@ -339,3 +354,89 @@ node-0003
 
 ###### 初始化启动集群
 
+1、重启机器、在 node-0001，node-0002，node-0003 启动 zookeeper
+
+```shell
+[root@node-0001 ~]# /usr/local/zookeeper/bin/zkServer.sh start
+#----------------------------------------------------------------------------------------
+[root@node-0002 ~]# /usr/local/zookeeper/bin/zkServer.sh start
+#----------------------------------------------------------------------------------------
+[root@node-0003 ~]# /usr/local/zookeeper/bin/zkServer.sh start
+#----------------------------------------------------------------------------------------
+[root@hadoop1 ~]# zkstats node-{0001..0003}
+           node-0001 Mode: follower
+           node-0002 Mode: leader
+           node-0003 Mode: follower
+```
+
+2、清空实验数据并同步配置文件
+
+```shell
+[root@hadoop1 ~]# rm -rf /var/hadoop/* /usr/local/hadoop/logs
+[root@hadoop1 ~]# for i in hadoop2 node-{0001..0003};do
+                      rsync -av /etc/hosts ${i}:/etc/
+                      rsync -aXSH --delete /var/hadoop ${i}:/var/
+                      rsync -aXSH --delete /usr/local/hadoop ${i}:/usr/local/
+                  done
+```
+
+3、在 node-0001，node-0002，node-0003 启动 journalnode 服务
+
+```shell
+[root@node-0001 ~]# /usr/local/hadoop/sbin/hadoop-daemon.sh start journalnode
+[root@node-0001 ~]# jps
+1037 JournalNode
+#----------------------------------------------------------------------------------------
+[root@node-0002 ~]# /usr/local/hadoop/sbin/hadoop-daemon.sh start journalnode
+#----------------------------------------------------------------------------------------
+[root@node-0003 ~]# /usr/local/hadoop/sbin/hadoop-daemon.sh start journalnode
+```
+
+4、初始化（hadoop1 上执行）
+
+```shell
+[root@hadoop1 ~]# /usr/local/hadoop/bin/hdfs zkfc -formatZK
+[root@hadoop1 ~]# /usr/local/hadoop/bin/hdfs namenode -format
+[root@hadoop1 ~]# /usr/local/hadoop/bin/hdfs namenode -initializeSharedEdits
+[root@hadoop1 ~]# rsync -aXSH --delete /var/hadoop/dfs hadoop2:/var/hadoop/
+```
+
+5、停止在 node-0001，node-0002，node-0003 上的 journalnode 服务
+
+```shell
+[root@node-0001 ~]# /usr/local/hadoop/sbin/hadoop-daemon.sh stop journalnode
+#----------------------------------------------------------------------------------------
+[root@node-0002 ~]# /usr/local/hadoop/sbin/hadoop-daemon.sh stop journalnode
+#----------------------------------------------------------------------------------------
+[root@node-0003 ~]# /usr/local/hadoop/sbin/hadoop-daemon.sh stop journalnode
+```
+
+6、启动集群
+
+```shell
+#-------------------- 下面这条命令在 hadoop1 上执行 ----------------------------------------
+[root@hadoop1 ~]# /usr/local/hadoop/sbin/start-all.sh
+#-------------------- 下面这条命令在 hadoop2 上执行 ----------------------------------------
+[root@hadoop2 ~]# /usr/local/hadoop/sbin/yarn-daemon.sh start resourcemanager
+```
+
+###### 验证集群
+
+```shell
+[root@hadoop1 ~]# /usr/local/hadoop/bin/hdfs haadmin -getServiceState nn1
+[root@hadoop1 ~]# /usr/local/hadoop/bin/hdfs haadmin -getServiceState nn2
+[root@hadoop1 ~]# /usr/local/hadoop/bin/yarn rmadmin -getServiceState rm1
+[root@hadoop1 ~]# /usr/local/hadoop/bin/yarn rmadmin -getServiceState rm2
+[root@hadoop1 ~]# /usr/local/hadoop/bin/hdfs dfsadmin -report
+[root@hadoop1 ~]# /usr/local/hadoop/bin/yarn node -list
+```
+
+使用高可用集群分析数据实验
+
+```shell
+[root@hadoop1 ~]# cd /usr/local/hadoop
+[root@hadoop1 hadoop]# ./bin/hadoop fs -mkdir /input
+[root@hadoop1 hadoop]# ./bin/hadoop fs -put *.txt /input/
+[root@hadoop1 hadoop]# ./bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.7.jar wordcount /input /output
+[root@hadoop1 hadoop]# ./bin/hadoop fs -cat /output/*
+```

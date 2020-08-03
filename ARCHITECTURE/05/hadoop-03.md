@@ -105,10 +105,14 @@ imok
 1400 Kafka
 ```
 
-3、验证
+3、验证（在不同机器上执行验证）
 
 ```shell
-
+[root@node-0001 ~]# /usr/local/kafka/bin/kafka-topics.sh --create --partitions 1 --replication-factor 1 --zookeeper localhost:2181 --topic mymsg
+#----------------------------------------------------------------------------------------
+[root@node-0002 ~]# /usr/local/kafka/bin/kafka-console-producer.sh --broker-list  localhost:9092 --topic mymsg
+#----------------------------------------------------------------------------------------
+[root@node-0003 ~]# /usr/local/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic mymsg
 ```
 
 #### Hadoop高可用集群

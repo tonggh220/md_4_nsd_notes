@@ -105,7 +105,7 @@ imok
 1400 Kafka
 ```
 
-3、验证（在不同机器上执行验证）
+3、验证（在不同机器上执行）
 
 ```shell
 [root@node-0001 ~]# /usr/local/kafka/bin/kafka-topics.sh --create --partitions 1 --replication-factor 1 --zookeeper localhost:2181 --topic mymsg

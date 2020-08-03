@@ -117,3 +117,27 @@ imok
 
 #### Hadoop高可用集群
 
+###### 高可用架构图例
+
+```mermaid
+graph TB
+namenode
+```
+
+购买云主机
+
+| 主机名 | IP地址 |基础配置|
+| ---- | ---- | ---- |
+| hadoop2 | 192.168.1.56 |2cpu, 2G内存|
+
+
+###### 角色与配置
+
+| 主机名 | IP地址 |角色服务|
+| ---- | ---- | ---- |
+| hadoop1 | 192.168.1.50 |namenode, resourcemanager, ZKFC|
+| hadoop2 | 192.168.1.56 |namenode, resourcemanager, ZKFC|
+| node-0001 | 192.168.1.51 |datanode, nodemanager, zookeeper, journalnode|
+| node-0002 | 192.168.1.52 |datanode, nodemanager, zookeeper, journalnode|
+| node-0003 | 192.168.1.53 |datanode, nodemanager, zookeeper, journalnode|
+

@@ -79,7 +79,37 @@ imok
 
 #### kafka集群
 
+###### kafka安装
 
+1、安装配置 kafka，并同步给其他主机
+
+拷贝云盘 public/hadoop/kafka_2.12-2.1.0.tgz 到 hadoop1
+
+```shell
+[root@hadoop1 ~]# yum install -y java-1.8.0-openjdk-devel
+[root@hadoop1 ~]# tar zxf kafka_2.12-2.1.0.tgz
+[root@hadoop1 ~]# mv kafka_2.12-2.1.0 /usr/local/kafka
+[root@hadoop1 ~]# for i in node-{0001..0003};do
+                      rsync -aXSH --delete /usr/local/kafka ${i}:/usr/local/
+                  done
+```
+
+2、修改 node-0001,node-0002,node-0003 配置文件并启动服务
+
+```shell
+[root@node-0001 ~]# vim /usr/local/kafka/config/server.properties
+21   broker.id=1
+123  zookeeper.connect=node-0001:2181,node-0002:2181,node-0003:2181
+[root@node-0001 ~]# /usr/local/kafka/bin/kafka-server-start.sh -daemon /usr/local/kafka/config/server.properties
+[root@node-0001 ~]# jps
+1400 Kafka
+```
+
+3、验证
+
+```shell
+
+```
 
 #### Hadoop高可用集群
 

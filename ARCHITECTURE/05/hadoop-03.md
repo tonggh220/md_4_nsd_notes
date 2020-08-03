@@ -141,3 +141,199 @@ namenode
 | node-0002 | 192.168.1.52 |datanode, nodemanager, zookeeper, journalnode|
 | node-0003 | 192.168.1.53 |datanode, nodemanager, zookeeper, journalnode|
 
+###### 环境初始化
+
+hadoop1 上执行
+
+```shell
+[root@hadoop1 ~]# vim /etc/hosts
+192.168.1.50    hadoop1
+192.168.1.56    hadoop2
+192.168.1.51    node-0001
+192.168.1.52    node-0002
+192.168.1.53    node-0003
+[root@hadoop1 ~]# rsync -aXSH --delete /root/.ssh hadoop2:/root/
+[root@hadoop1 ~]# for i in hadoop2 node-{0001..0003};do
+                      rsync -av /etc/hosts ${i}:/etc/
+                  done
+```
+
+hadoop2 上执行
+
+```shell
+[root@hadoop2 ~]# yum install -y java-1.8.0-openjdk-devel
+[root@hadoop2 ~]# vim /etc/ssh/ssh_config
+# 60行新添加
+	StrictHostKeyChecking no
+```
+
+###### 集群配置文件
+
+在 hadoop1 上完成以下文件的配置
+
+1、配置 hadoop-env.sh
+
+```shell
+[root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/hadoop-env.sh
+25:  export JAVA_HOME="java-1.8.0-openjdk安装路径"
+33:  export HADOOP_CONF_DIR="/usr/local/hadoop/etc/hadoop"
+```
+
+2、配置 slaves
+
+```shell
+[root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/slaves
+node-0001
+node-0002
+node-0003
+```
+
+3、配置 core-site.xml
+
+```xml
+[root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/core-site.xml
+<configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://mycluster</value>
+    </property>
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/var/hadoop</value>
+    </property>
+    <property>
+        <name>ha.zookeeper.quorum</name>
+        <value>node-0001:2181,node-0002:2181,node-0003:2181</value>
+    </property>
+    <property>
+        <name>hadoop.proxyuser.nfsuser.groups</name>
+        <value>*</value>
+    </property>
+    <property>
+        <name>hadoop.proxyuser.nfsuser.hosts</name>
+        <value>*</value>
+    </property>
+</configuration>
+```
+
+4、配置 hdfs-site.xml
+
+```xml
+[root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/hdfs-site.xml
+<configuration>
+    <property>
+        <name>dfs.nameservices</name>
+        <value>mycluster</value>
+    </property>
+    <property>
+        <name>dfs.ha.namenodes.mycluster</name>
+        <value>nn1,nn2</value>
+    </property>
+    <property>
+        <name>dfs.namenode.rpc-address.mycluster.nn1</name>
+        <value>hadoop1:8020</value>
+    </property>
+    <property>
+        <name>dfs.namenode.rpc-address.mycluster.nn2</name>
+        <value>hadoop2:8020</value>
+    </property>
+    <property>
+        <name>dfs.namenode.http-address.mycluster.nn1</name>
+        <value>hadoop1:50070</value>
+    </property>
+    <property>
+        <name>dfs.namenode.http-address.mycluster.nn2</name>
+        <value>hadoop2:50070</value>
+    </property>
+    <property>
+        <name>dfs.namenode.shared.edits.dir</name>
+        <value>qjournal://node-0001:8485;node-0002:8485;node-0003:8485/mycluster</value>
+    </property>
+    <property>
+        <name>dfs.journalnode.edits.dir</name>
+        <value>/var/hadoop/journal</value>
+    </property>
+    <property>
+        <name>dfs.client.failover.proxy.provider.mycluster</name>
+        <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+    </property>
+    <property> 
+        <name>dfs.ha.fencing.methods</name>
+        <value>sshfence</value>
+    </property>
+    <property>
+        <name>dfs.ha.fencing.ssh.private-key-files</name>
+        <value>/root/.ssh/id_rsa</value>
+    </property>
+    <property>
+        <name>dfs.ha.automatic-failover.enabled</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>dfs.replication</name>
+        <value>2</value>
+    </property>
+    <property>
+        <name>dfs.hosts.exclude</name>
+        <value>/usr/local/hadoop/etc/hadoop/exclude</value>
+    </property>
+</configuration>
+```
+
+5、配置 mapred-site.xml
+
+```xml
+[root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/mapred-site.xml
+<configuration>
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+    </property>
+</configuration>
+```
+
+6、配置 yare-site.xml
+
+```xml
+[root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/yarn-site.xml
+<configuration>
+    <property>
+        <name>yarn.resourcemanager.ha.enabled</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.recovery.enabled</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.store.class</name>
+        <value>org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.zk-address</name>
+        <value>node-0001:2181,node-0002:2181,node-0003:2181</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.cluster-id</name>
+        <value>yarn-ha</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.ha.rm-ids</name>
+        <value>rm1,rm2</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.hostname.rm1</name>
+        <value>hadoop1</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.hostname.rm2</name>
+        <value>hadoop2</value>
+    </property>
+<!-- Site specific YARN configuration properties -->
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+</configuration>
+```
+

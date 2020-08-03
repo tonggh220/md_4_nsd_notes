@@ -61,7 +61,21 @@ server.4=hadoop1:2888:3888:observer
 
 `/usr/local/zookeeper/bin/zkServer.sh status`
 
+###### zookeeper集群管理
 
+[手册地址](http://zookeeper.apache.org/doc/r3.4.10/zookeeperAdmin.html)
+
+```shell
+[root@hadoop1 ~]# yum install -y socat
+[root@hadoop1 ~]# socat - TCP:node-0001:2181
+ruok
+imok
+[root@hadoop1 bin]# ./zkstats hadoop1 node-{0001..0003}
+             hadoop1 Mode: observer
+           node-0001 Mode: follower
+           node-0002 Mode: leader
+           node-0003 Mode: follower
+```
 
 #### kafka集群
 

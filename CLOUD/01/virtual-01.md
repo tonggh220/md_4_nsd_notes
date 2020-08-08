@@ -1,18 +1,21 @@
 # 云计算基础 -- 虚拟化技术
 
-常用虚拟化技术
+## Linux虚拟化技术
+
+#### 常用虚拟化技术
+
   vmware（收费，企业版 esxi ）
   https://www.proxmox.com/en/proxmox-ve
   redhat kvm rhev
 
-## 虚拟化平台安装
+#### 虚拟化平台安装
 
 查看是否支持虚拟化
 
 ```shell 
-[root@room9pc119 ~]# grep -P "vmx|svm" /proc/cpuinfo
+[root@localhost ~]# grep -P "vmx|svm" /proc/cpuinfo
 flags		: ... ... vmx
-[root@room9pc119 ~]# lsmod |grep kvm
+[root@localhost ~]# lsmod |grep kvm
 kvm_intel             174841  6 
 kvm                   578518  1 kvm_intel
 irqbypass              13503  1 kvm
@@ -44,7 +47,7 @@ gpgcheck=0
 ​    硬盘文件  /var/lib/libvirt/images/
 ​    配置文件  /etc/libvirt/qemu/
 
-#### 实验虚拟化图例
+#### 虚拟化实验图例
 
 ```mermaid
 graph TB
@@ -59,7 +62,9 @@ graph TB
   end
 ```
 
-## 虚拟机硬盘磁盘文件
+#### Linux虚拟机
+
+###### 虚拟机硬盘磁盘文件
 
 通过xshell上传 cirros.qcow2 到虚拟机
 通过 qemu-img 创建虚拟机磁盘
@@ -72,7 +77,7 @@ graph TB
 [root@localhost ~]# qemu-img info vmhost.img #查看信息
 ```
 
-## 虚拟机配置文件
+###### 虚拟机配置文件
 
 官方文档地址 https://libvirt.org/format.html
 
@@ -92,7 +97,7 @@ graph TB
 26:	<source file='/var/lib/libvirt/images/vmhost.img'/>
 ```
 
-## 虚拟网络配置
+###### 虚拟网络配置
 
 虚拟网络管理命令
 
@@ -132,7 +137,7 @@ virsh net-autostart  	设置开机自启动
 [root@localhost ~]# ifconfig # 查看验证
 ```
 
-## 虚拟机管理
+#### 虚拟机管理
 
 虚拟机管理命令
 
@@ -151,7 +156,7 @@ virsh domiflist  				查看虚拟机网卡信息
 virsh domblklist 				查看虚拟机硬盘信息
 ```
 
-#### 创建虚拟机
+###### 创建虚拟机
 
 ```shell
 [root@localhost ~]# virsh list
@@ -161,9 +166,11 @@ virsh domblklist 				查看虚拟机硬盘信息
 退出使用 ctrl + ]
 ```
 
-# 公有云简介
+## 公有云简介
 
-## xshell 使用技巧
+#### 常用终端管理工具
+
+###### xshell 使用技巧
 
 使用 lrzsz 上传下载文件
 

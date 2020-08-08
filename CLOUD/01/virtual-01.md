@@ -148,9 +148,9 @@ graph TB
 |命令|说明|
 |----|----|
 |virsh list [--all]|列出虚拟机|
-|virsh start|shutdown|reboot|虚拟机启动，停止，重启|
+|virsh start/shutdown|启动/关闭虚拟机|
 |virsh destroy|强制停止虚拟机|
-|virsh define|undefine|根据xml文件创建/删除虚拟机|
+|virsh define/undefine|创建/删除虚拟机|
 |virsh ttyconsole|显示终端设备|
 |virsh console|连接虚拟机的 console|
 |virsh edit|修改虚拟机的配置|

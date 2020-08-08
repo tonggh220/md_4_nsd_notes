@@ -28,6 +28,10 @@ irqbypass              13503  1 kvm
 3、配置 yum 源
 
 ```shell
+[root@localhost ~]# mkdir -p /var/centos-1804
+[root@localhost ~]# vim /etc/fstab
+dev/cdrom              /var/centos-1804        iso9660 defaults,ro     0 0
+[root@localhost ~]# mount /var/centos-1804
 [CentOS-Base]
 name=CentOS-$releasever - Base
 baseurl="file:///var/centos-1804"

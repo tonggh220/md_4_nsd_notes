@@ -105,15 +105,15 @@ graph TB
 
 虚拟网络管理命令
 
-```shell
-virsh net-list [--all]	列出虚拟网络
-virsh net-start    		启动虚拟交换机
-virsh net-destroy   	强制停止虚拟交换机
-virsh net-define    	根据xml文件创建虚拟网络
-virsh net-undefine   	删除一个虚拟网络设备
-virsh net-edit     		修改虚拟交换机的配置
-virsh net-autostart  	设置开机自启动
-```
+| 命令                   | 说明                    |
+| ---------------------- | -----------------------|
+| virsh net-list [--all] | 列出虚拟网络|
+| virsh net-start        | 启动虚拟交换机|
+| virsh net-destroy      | 强制停止虚拟交换机|
+| virsh net-define       | 根据xml文件创建虚拟网络|
+| virsh net-undefine     | 删除一个虚拟网络设备|
+| virsh net-edit         | 修改虚拟交换机的配置|
+| virsh net-autostart    | 设置开机自启动|
 
 创建配置文件 /etc/libvirt/qemu/networks/vbr.xml
 
@@ -145,20 +145,20 @@ virsh net-autostart  	设置开机自启动
 
 虚拟机管理命令
 
-```shell
-virsh list [--all]           	列出虚拟机
-virsh start|shutdown|reboot  	虚拟机启动，停止，重启
-virsh destroy                	强制停止虚拟机
-virsh define|undefine        	根据xml文件创建/删除虚拟机
-virsh ttyconsole             	显示终端设备
-virsh console                	连接虚拟机的 console
-virsh edit       				修改虚拟机的配置
-virsh autostart  				设置虚拟机自启动
-virsh domfsinfo  				查看文件系统信息
-virsh dominfo    				查看虚拟机摘要信息
-virsh domiflist  				查看虚拟机网卡信息
-virsh domblklist 				查看虚拟机硬盘信息
-```
+|命令|说明|
+|----|----|
+|virsh list [--all]|列出虚拟机|
+|virsh start|shutdown|reboot|虚拟机启动，停止，重启|
+|virsh destroy|强制停止虚拟机|
+|virsh define|undefine|根据xml文件创建/删除虚拟机|
+|virsh ttyconsole|显示终端设备|
+|virsh console|连接虚拟机的 console|
+|virsh edit|修改虚拟机的配置|
+|virsh autostart|设置虚拟机自启动|
+|virsh domfsinfo|查看文件系统信息|
+|virsh dominfo|查看虚拟机摘要信息|
+|virsh domiflist|查看虚拟机网卡信息|
+|virsh domblklist|查看虚拟机硬盘信息|
 
 ###### 创建虚拟机
 

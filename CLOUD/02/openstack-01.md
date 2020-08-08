@@ -92,7 +92,7 @@ SELinux status:                 disabled
 ```shell
 [root@openstack ~]# systemctl stop NetworkManager
 [root@openstack ~]# yum remove -y NetworkManager
-[root@openstack ~]# systemctl enable --now  network
+[root@openstack ~]# systemctl enable --now network
 ```
 
 网卡配置文件注解

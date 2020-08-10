@@ -37,7 +37,8 @@ local stratum 10
 [root@repo ~]# mount -t iso9660 -o ro,loop RHEL7-extras.iso /var/ftp/extras
 [root@repo ~]# mount -t iso9660 -o ro,loop RHEL7OSP-10.iso /var/ftp/openstack
 # 在openstack上验证
-[root@openstack ~]# curl ftp://192.168.1.250/
+[root@openstack ~]# curl ftp://192.168.1.250/extras/
+[root@openstack ~]# curl ftp://192.168.1.250/openstack/
 ```
 
 ## openstack 实验架构图例

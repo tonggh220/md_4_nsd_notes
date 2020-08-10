@@ -1,16 +1,14 @@
 # openstack 安装
 
 ## 环境准备
-openstack 主机
-IP:192.168.1.10 内存:8G CPU:2 硬盘最小10G
+| 主机名称  | IP地址        | 最小资源配置 |
+| --------- | ------------- | ------------ |
+| openstack | 192.168.1.10  | 2CPU,8G内存  |
+| nova01    | 192.168.1.11  | 2CPU,3G内存  |
+| nova02    | 192.168.1.12  | 2CPU,3G内存  |
+| repo      | 192.168.1.250 | 2CPU,1G内存  |
 
-nova 主机（nova01, nova02）
-IP:192.168.1.11 内存:3G CPU:2 硬盘最小10G
-IP:192.168.1.12 内存:3G CPU:2 硬盘最小10G
-
-功能服务器 repo
-IP:192.168.1.250 内存:1G CPU:2 硬盘最小20G
-上传 RHEL7-extras.iso、RHEL7OSP-10.iso 到功能服务器
+**上传 RHEL7-extras.iso、RHEL7OSP-10.iso 到功能服务器[repo]**
 
 ## 功能服务器安装配置
 

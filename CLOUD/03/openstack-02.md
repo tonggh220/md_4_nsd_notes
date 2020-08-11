@@ -47,7 +47,7 @@ SELinux status:                 disabled
 ```shell
 [root@nova02 ~]# systemctl stop NetworkManager
 [root@nova02 ~]# yum remove -y NetworkManager
-[root@nova02 ~]# systemctl enable --now  network
+[root@nova02 ~]# systemctl enable --now network
 ```
 
 网卡配置文件

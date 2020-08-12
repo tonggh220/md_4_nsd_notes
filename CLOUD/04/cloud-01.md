@@ -31,6 +31,7 @@ style U fill:#ff99ff
 ```shell
 [root@ecs-proxy ~]# rm -rf /etc/yum.repos.d/*.repo
 [root@ecs-proxy ~]# curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.myhuaweicloud.com/repo/CentOS-Base-7.repo
+[root@ecs-proxy ~]# yum clean all
 [root@ecs-proxy ~]# yum makecache
 [root@ecs-proxy ~]# yum install -y net-tools lftp rsync psmisc vim-enhanced tree vsftpd  bash-completion createrepo lrzsz iproute
 [root@ecs-proxy ~]# mkdir /var/ftp/localrepo
@@ -86,6 +87,7 @@ name=CentOS-$releasever – Localrepo
 baseurl=ftp://192.168.1.252/localrepo
 enabled=1
 gpgcheck=0
+[root@ecs-host ~]# yum clean all
 [root@ecs-host ~]# yum makecache
 [root@ecs-host ~]# yum repolist
 [root@ecs-host ~]# yum install -y net-tools lftp rsync psmisc vim-enhanced tree lrzsz bash-completion lrzsz iproute

@@ -111,7 +111,7 @@ docker  run  -itd  -p 宿主机端口:容器端口  镜像名称:标签
 
 容器共享卷
 
-–docker  run  -itd  -v 宿主机对象:容器内对象  镜像名称:标签
+docker  run  -itd  -v 宿主机对象:容器内对象  镜像名称:标签
 
 ```shell
 [root@node-0001 ~]# docker rm -f $(docker ps -aq)
@@ -260,7 +260,9 @@ graph TB
 
 ###### 私有仓库配置
 
-购买1台 1cpu, 1G内存的云主机(192.168.1.100	 registry)
+| 主机名   | ip地址        | 最低配置    |
+| -------- | ------------- | ----------- |
+| registry | 192.168.1.100 | 1CPU,1G内存 |
 
 ```shell
 [root@registry ~]# yum install -y docker-distribution

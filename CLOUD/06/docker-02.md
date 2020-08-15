@@ -15,6 +15,8 @@ docker  commit  容器id  新镜像名称:标签
 [root@node-0001 ~]# docker commit 02fd1719c038 myos:latest
 ```
 
+#### Dockerfile打包镜像
+
 ###### Dockerfile语法
 
 | 语法指令 | 语法说明                              |

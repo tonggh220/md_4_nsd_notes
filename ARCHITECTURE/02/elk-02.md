@@ -287,3 +287,33 @@ RemoteIPInternalProxy 100.125.0.0/16
 [root@kibana ~]# systemctl start kibana
 ```
 
+###### 常见错误
+
+使用通配符删除报错
+
+```shell
+[root@es-0001 ~]# curl -XDELETE http://localhost:9200/*
+{"error":{"root_cause":[{"type":"illegal_argument_exception","reason":"Wildcard expressions or all indices are not allowed"}],"type":"illegal_argument_exception","reason":"Wildcard expressions or all indices are not allowed"},"status":400}
+# 由于设置了destructive_requires_name 参数，不允许使用通配符
+# 查看及解决方式
+[root@es-0001 ~]# curl -XGET http://es-0001:9200/_cluster/settings?pretty
+{
+  "persistent" : {
+    "action" : {
+      "destructive_requires_name" : "true"
+    }
+  },
+  "transient" : { }
+}
+[root@es-0001 ~]# curl -XPUT http://localhost:9200/_cluster/settings -d '
+{
+  "persistent": {
+      "action": {
+        "destructive_requires_name": "true"
+      }
+   }
+}'
+[root@es-0001 ~]# curl -XDELETE http://localhost:9200/*
+{"acknowledged":true}
+```
+

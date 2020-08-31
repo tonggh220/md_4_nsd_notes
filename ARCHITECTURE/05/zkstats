@@ -5,7 +5,8 @@ function getzkstat(){
     echo stat >&8
     Msg=$(cat <&8 |grep -P "^Mode:")
     exec 8<&-
-    printf "%20s %s\n" "$1" "${Msg:-Mode: \x1b[31mNULL\x1b[0m}"
+    printf "%15s " $1
+    echo -e "${Msg:-Mode: \x1b[31mNULL\x1b[0m}"
 }
 
 if (( $# == 0 ));then

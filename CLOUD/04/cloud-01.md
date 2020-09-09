@@ -95,7 +95,7 @@ gpgcheck=0
 #### 优化系统服务
 ```shell
 [root@ecs-host ~]# systemctl stop postfix atd polkit
-[root@ecs-host ~]# yum remove -y postfix at audit polkit firewalld-*
+[root@ecs-host ~]# yum remove -y postfix at audit tuned polkit firewalld-*
 [root@ecs-host ~]# yum install chrony
 [root@ecs-host ~]# vim /etc/chrony.conf 
 # 注释掉 server 开头行，添加下面的配置

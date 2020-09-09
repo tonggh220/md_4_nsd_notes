@@ -153,6 +153,7 @@ style U2 fill:#aa99ff
 
 ```shell
 [root@ecs-proxy ~]# vim /etc/ansible/ansible.cfg
+[defaults]
 inventory         = /etc/ansible/hosts
 host_key_checking = False
 [root@ecs-proxy ~]# vim /etc/ansible/hosts

@@ -42,7 +42,7 @@ docker  commit  容器id  新镜像名称:标签
 [root@node-0001 mybuild]# vim Dockerfile
 FROM centos:latest
 RUN  rm -f /etc/yum.repos.d/*.repo
-COPY CentOS-Base.repo local.repo /etc/yum.repos.d/
+COPY CentOS-Base.repo /etc/yum.repos.d/
 RUN  yum install -y net-tools vim-enhanced tree bash-completion iproute psmisc && yum clean all
 CMD  ["/usr/bin/python"]
 [root@node-0001 mybuild]# cp /etc/yum.repos.d/CentOS-Base.repo ./

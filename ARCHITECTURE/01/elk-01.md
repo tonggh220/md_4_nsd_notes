@@ -204,7 +204,8 @@ http://公网IP:9200/\_plugin/bigdesk
 ###### 修改数据
 
 ```shell\
-[root@es-0001 ~]# curl -XPOST http://es-0001:9200/tedu/teacher/1/_update -d '{ 
+[root@es-0001 ~]# curl -XPOST http://es-0001:9200/tedu/teacher/1/_update -d \
+'{ 
     "doc": {
         "年代": "公元701"
     }
@@ -218,8 +219,6 @@ http://公网IP:9200/\_plugin/bigdesk
 [root@es-0001 ~]# curl -XDELETE http://es-0001:9200/tedu/teacher/1
 # 删除索引
 [root@es-0001 ~]# curl -XDELETE http://es-0001:9200/tedu
-# 删除所有
-[root@es-0001 ~]# curl -XDELETE http://es-0001:9200/*
 ```
 
 #### kibana安装

@@ -309,7 +309,7 @@ RemoteIPInternalProxy 100.125.0.0/16
 {
   "persistent": {
       "action": {
-        "destructive_requires_name": "true"
+        "destructive_requires_name": "false"
       }
    }
 }'

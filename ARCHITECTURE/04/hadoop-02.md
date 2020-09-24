@@ -119,7 +119,7 @@ Total Nodes:4
 ###### NFS网关架构图
 
 ```mermaid
-graph RL
+graph LR
 subgraph HDFS集群
   style HDFS集群 color:#ff0000,fill:#aaccff
   N1(namenode)

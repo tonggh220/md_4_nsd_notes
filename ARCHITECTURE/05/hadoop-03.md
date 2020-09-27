@@ -369,7 +369,7 @@ node-0003
            node-0003 Mode: follower
 ```
 
-2、清空实验数据并同步配置文件
+2、清空实验数据并同步配置文件（hadoop1 上执行）
 
 ```shell
 [root@hadoop1 ~]# rm -rf /var/hadoop/* /usr/local/hadoop/logs

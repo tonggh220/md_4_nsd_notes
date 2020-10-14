@@ -90,7 +90,7 @@ gpgcheck=0
 [root@ecs-host ~]# yum clean all
 [root@ecs-host ~]# yum makecache
 [root@ecs-host ~]# yum repolist
-[root@ecs-host ~]# yum install -y net-tools lftp rsync psmisc vim-enhanced tree lrzsz bash-completion lrzsz iproute
+[root@ecs-host ~]# yum install -y net-tools lftp rsync psmisc vim-enhanced tree lrzsz bash-completion iproute
 ```
 #### 优化系统服务
 ```shell

@@ -186,6 +186,25 @@ Hello Tedu
 [root@node-0001 ~]# docker rm -f $(docker ps -aq)
 ```
 
+#### 容器内服务安装
+
+```shell
+[root@node-0001 ~]# docker rm -f $(docker ps -aq)
+[root@node-0001 ~]# docker run -it --name myapache centos:latest
+[root@a7f9d0c3e3e2 /]# rm -f /etc/yum.repos.d/*.repo
+#---------------------不要退出这个终端，在另一个终端拷贝 yum 配置文件到容器--------------------
+[root@node-0001 ~]# docker cp /etc/yum.repos.d/CentOS-Base.repo myapache:/etc/yum.repos.d/
+#------------------------回到创建容器的终端继续执行命令--------------------------------------
+[root@a7f9d0c3e3e2 /]# yum install -y net-tools httpd
+[root@a7f9d0c3e3e2 /]# echo Hello world >/var/www/html/index.html
+[root@a7f9d0c3e3e2 /]# export LANG=C
+[root@a7f9d0c3e3e2 /]# ifconfig
+[root@a7f9d0c3e3e2 /]# /usr/sbin/httpd -DFOREGROUND
+# 启动服务以后 ctrl-p， ctrl-q 退出
+[root@node-0001 ~]# curl http://172.17.0.2/
+Hello world
+```
+
 总结：
 
 ​    管理镜像使用   **名称:标签**

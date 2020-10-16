@@ -203,14 +203,14 @@ U((用户)) --> APP1
             fastcgi_index  index.php;
             include        fastcgi.conf;
         }
-# 启动后端 php 服务，并映射共享目录
-[root@node-0001 ~]# docker run -itd --name myphp \
-                    -v /var/webroot:/usr/local/nginx/html myos:php-fpm
 # 启动前端 nginx 服务，并映射共享目录和配置文件
-[root@node-0001 ~]# docker run -itd -p 80:80 \
-	                -v /var/webroot:/usr/local/nginx/html  \
-                    -v /var/webconf/nginx.conf:/usr/local/nginx/conf/nginx.conf \
-	                --network=container:myphp myos:nginx
+[root@node-0001 ~]# docker run -itd --name nginx -p 80:80 \
+      -v /var/webconf/nginx.conf:/usr/local/nginx/conf/nginx.conf \
+      -v /var/webroot:/usr/local/nginx/html myos:nginx
+# 启动后端 php 服务，并映射共享目录
+[root@node-0001 ~]# docker run -itd --network=container:nginx \
+      -v /var/webroot:/usr/local/nginx/html myos:php-fpm
+
 # 验证服务
 [root@node-0001 ~]# curl http://node-0001/info.html
 <html>

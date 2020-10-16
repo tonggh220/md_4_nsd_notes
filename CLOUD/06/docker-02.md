@@ -136,7 +136,7 @@ docker  run  -itd  -p 宿主机端口:容器端口  镜像名称:标签
 
 # 把 node-0001 变成 nginx 服务，首先必须停止 apache
 [root@node-0001 ~]# docker stop $(docker ps -q)
-[root@node-0001 ~]# docker run -itd -p 80:80 nginx:latest
+[root@node-0001 ~]# docker run -itd -p 80:80 myos:nginx
 ```
 
 验证方式： 通过浏览器访问即可

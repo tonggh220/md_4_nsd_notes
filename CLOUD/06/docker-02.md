@@ -141,33 +141,31 @@ docker  run  -itd  -p 宿主机端口:容器端口  镜像名称:标签
 
 验证方式： 通过浏览器访问即可
 
-容器共享卷
+###### 容器共享卷
 
 docker  run  -itd  -v 宿主机对象:容器内对象  镜像名称:标签
 
+使用共享卷动态修改容器内配置文件
+
 ```shell
-[root@node-0001 ~]# docker rm -f $(docker ps -aq)
-# 创建 apache 容器
-[root@node-0001 ~]# docker run -itd --name webtest myos:httpd
-# 创建目录，并拷贝 httpd.conf 配置文件
-[root@node-0001 ~]# mkdir -p /var/{webroot,webconf}
-[root@node-0001 ~]# docker cp webtest:/etc/httpd/conf/httpd.conf /var/webconf/
-# 设置默认首页
-[root@node-0001 ~]# echo "i am apache" >>/var/webroot/index.html
-# 修改配置文件的监听端口
-[root@node-0001 ~]# vim /var/webconf/httpd.conf
-Listen 8080
-# 启动容器，映射 80端口到8080，映射配置文件 /var/webconf/httpd.conf 映射数据目录 /var/webroot
-[root@node-0001 ~]# docker run -itd -p 80:8080 \
-                               -v /var/webconf/httpd.conf:/etc/httpd/conf/httpd.conf \
-                               -v /var/webroot:/var/www/html myos:httpd
+[root@node-0001 ~]# docker run -itd --name myphp myos:php-fpm
+[root@node-0001 ~]# docker inspect myphp
+[root@node-0001 ~]# mkdir /var/webconf
+[root@node-0001 ~]# cp /usr/local/nginx/conf/nginx.conf /var/webconf/
+[root@node-0001 ~]# vim /var/webconf/nginx.conf
+... ...
+    fastcgi_pass   172.17.0.xx:9000;
+... ...
+# 映射配置文件，并启动容器
+[root@localhost ~]# docker run -itd -p 80:80 \
+     -v /var/webconf/nginx.conf:/usr/local/nginx/conf/nginx.conf myos:nginx
 ```
 
 验证方式： 通过浏览器访问即可
 
-#### 综合实验Nginx-PHP动静分离
+###### 容器间网络通信
 
-###### 实验架构图例
+实验架构图例
 
 ```mermaid
 graph LR
@@ -191,12 +189,12 @@ graph LR
 U((用户)) --> APP1
 ```
 
-###### 实验步骤
+实验步骤
 
 ```shell
 [root@node-0001 ~]# mkdir -p /var/{webroot,webconf}
-[root@node-0001 ~]# cp info.php  /var/webroot/
-[root@node-0001 ~]# cp info.html /var/webroot/
+[root@node-0001 ~]# cd kubernetes/docker-images
+[root@node-0001 ~]# cp info.php info.html /var/webroot/
 [root@node-0001 ~]# cp /usr/local/nginx/conf/nginx.conf /var/webconf/
 [root@node-0001 ~]# vim /var/webconf/nginx.conf
         location ~ \.php$ {
@@ -205,11 +203,14 @@ U((用户)) --> APP1
             fastcgi_index  index.php;
             include        fastcgi.conf;
         }
-[root@node-0001 ~]# docker run -itd --name nginx -p 80:80 \
-                           -v /var/webconf/nginx.conf:/usr/local/nginx/conf/nginx.conf \
-                           -v /var/webroot:/usr/local/nginx/html myos:nginx 
-[root@node-0001 ~]# docker run -itd --network=container:nginx \
-                           -v /var/webroot:/usr/local/nginx/html myos:php-fpm
+# 启动后端 php 服务，并映射共享目录
+[root@node-0001 ~]# docker run -itd --name myphp \
+                    -v /var/webroot:/usr/local/nginx/html myos:php-fpm
+# 启动前端 nginx 服务，并映射共享目录和配置文件
+[root@node-0001 ~]# docker run -itd -p 80:80 \
+	                -v /var/webroot:/usr/local/nginx/html  \
+                    -v /var/webconf/nginx.conf:/usr/local/nginx/conf/nginx.conf \
+	                --network=container:myphp myos:nginx
 # 验证服务
 [root@node-0001 ~]# curl http://node-0001/info.html
 <html>

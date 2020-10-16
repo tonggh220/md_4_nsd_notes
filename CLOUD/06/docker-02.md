@@ -77,46 +77,6 @@ php_host: 	6c9e124bee1a
 1229
 ```
 
-###### 对外发布服务
-
-给他 node-0001 绑定一个公网IP
-
-docker  run  -itd  -p 宿主机端口:容器端口  镜像名称:标签
-
-```shell
-# 把 node-0001 变成 apache 服务
-[root@node-0001 ~]# docker run -itd -p 80:80 myos:httpd
-
-# 把 node-0001 变成 nginx 服务，首先必须停止 apache
-[root@node-0001 ~]# docker stop $(docker ps -q)
-[root@node-0001 ~]# docker run -itd -p 80:80 nginx:latest
-```
-
-验证方式： 通过浏览器访问即可
-
-容器共享卷
-
-docker  run  -itd  -v 宿主机对象:容器内对象  镜像名称:标签
-
-```shell
-[root@node-0001 ~]# docker rm -f $(docker ps -aq)
-# 创建 apache 容器
-[root@node-0001 ~]# docker run -itd --name webtest myos:httpd
-# 创建目录，并拷贝 httpd.conf 配置文件
-[root@node-0001 ~]# mkdir -p /var/{webroot,webconf}
-[root@node-0001 ~]# docker cp webtest:/etc/httpd/conf/httpd.conf /var/webconf/
-# 设置默认首页
-[root@node-0001 ~]# echo "i am apache" >>/var/webroot/index.html
-# 修改配置文件的监听端口
-[root@node-0001 ~]# vim /var/webconf/httpd.conf
-Listen 8080
-# 启动容器，映射 80端口到8080，映射配置文件 /var/webconf/httpd.conf 映射数据目录 /var/webroot
-[root@node-0001 ~]# docker run -itd -p 80:8080 \
-                               -v /var/webconf/httpd.conf:/etc/httpd/conf/httpd.conf \
-                               -v /var/webroot:/var/www/html myos:httpd
-```
-
-验证方式： 通过浏览器访问即可
 
 ###### 制作php-fpm镜像
 
@@ -161,6 +121,47 @@ WORKDIR /usr/local/nginx/html
 CMD  ["/usr/local/nginx/sbin/nginx", "-g", "daemon off;"]
 [root@node-0001 nginx]# docker build -t myos:nginx .
 ```
+
+###### 对外发布服务
+
+给他 node-0001 绑定一个公网IP
+
+docker  run  -itd  -p 宿主机端口:容器端口  镜像名称:标签
+
+```shell
+# 把 node-0001 变成 apache 服务
+[root@node-0001 ~]# docker run -itd -p 80:80 myos:httpd
+
+# 把 node-0001 变成 nginx 服务，首先必须停止 apache
+[root@node-0001 ~]# docker stop $(docker ps -q)
+[root@node-0001 ~]# docker run -itd -p 80:80 nginx:latest
+```
+
+验证方式： 通过浏览器访问即可
+
+容器共享卷
+
+docker  run  -itd  -v 宿主机对象:容器内对象  镜像名称:标签
+
+```shell
+[root@node-0001 ~]# docker rm -f $(docker ps -aq)
+# 创建 apache 容器
+[root@node-0001 ~]# docker run -itd --name webtest myos:httpd
+# 创建目录，并拷贝 httpd.conf 配置文件
+[root@node-0001 ~]# mkdir -p /var/{webroot,webconf}
+[root@node-0001 ~]# docker cp webtest:/etc/httpd/conf/httpd.conf /var/webconf/
+# 设置默认首页
+[root@node-0001 ~]# echo "i am apache" >>/var/webroot/index.html
+# 修改配置文件的监听端口
+[root@node-0001 ~]# vim /var/webconf/httpd.conf
+Listen 8080
+# 启动容器，映射 80端口到8080，映射配置文件 /var/webconf/httpd.conf 映射数据目录 /var/webroot
+[root@node-0001 ~]# docker run -itd -p 80:8080 \
+                               -v /var/webconf/httpd.conf:/etc/httpd/conf/httpd.conf \
+                               -v /var/webroot:/var/www/html myos:httpd
+```
+
+验证方式： 通过浏览器访问即可
 
 #### 综合实验Nginx-PHP动静分离
 

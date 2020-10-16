@@ -34,20 +34,6 @@ docker  commit  容器id  新镜像名称:标签
 
 **docker  build  -t  镜像名称:标签  Dockerfile所在目录**
 
-###### 制作 myos:python 镜像
-
-```dockerfile
-[root@node-0001 ~]# mkdir mybuild
-[root@node-0001 ~]# cd mybuild
-[root@node-0001 mybuild]# vim Dockerfile
-FROM centos:latest
-RUN  rm -f /etc/yum.repos.d/*.repo
-COPY CentOS-Base.repo /etc/yum.repos.d/
-RUN  yum install -y net-tools vim-enhanced tree bash-completion iproute psmisc && yum clean all
-CMD  ["/usr/bin/python"]
-[root@node-0001 mybuild]# cp /etc/yum.repos.d/CentOS-Base.repo ./
-[root@node-0001 mybuild]# docker build -t myos:python .
-```
 
 ###### 制作apache镜像
 
@@ -75,7 +61,6 @@ CMD ["/usr/sbin/httpd", "-DFOREGROUND"]
 [root@node-0001 web]# docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 myos                httpd               db15034569da        12 seconds ago      412MB
-myos                python              1739313b5b75        About an hour ago   281MB
 myos                latest              867409e412c8        2 hours ago         281MB
 [root@node-0001 web]# docker rm -f $(docker ps -aq)
 [root@node-0001 web]# docker run -itd myos:httpd

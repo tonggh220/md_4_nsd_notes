@@ -122,6 +122,8 @@ CMD  ["/usr/local/nginx/sbin/nginx", "-g", "daemon off;"]
 [root@node-0001 nginx]# docker build -t myos:nginx .
 ```
 
+#### 发布容器服务
+
 ###### 对外发布服务
 
 给他 node-0001 绑定一个公网IP

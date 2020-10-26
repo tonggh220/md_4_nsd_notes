@@ -146,9 +146,9 @@ Installed plugins in /usr/share/elasticsearch/plugins:
 
 2、http://弹性公网IP:9200/_plugin/插件名称  [bigdesk|head|kopf]
 
-http://公网IP:9200/\_plugin/kopf
+`http://公网IP:9200/\_plugin/kopf
 http://公网IP:9200/\_plugin/head
-http://公网IP:9200/\_plugin/bigdesk
+http://公网IP:9200/\_plugin/bigdesk`
 
 #### Elasticsearch基本操作
 

@@ -256,15 +256,6 @@ output{
    通过 ELB 把 web 服务发布公网
    https://support.huaweicloud.com/elb_faq/elb_faq_0090.html
 
-```shell\
-[root@web ~]# vim /etc/httpd/conf/httpd.conf
-#57 行新添加
-RemoteIPHeader X-Forwarded-For
-RemoteIPInternalProxy 100.125.0.0/16
-# 修改 198 行
-    LogFormat "%a %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
-[root@web ~]# systemctl restart httpd
-```
 
 4、配置 filebeat
    详见配置文件 filebeat.yml

@@ -134,7 +134,6 @@ graph TB
 |virsh console|连接虚拟机的 console|
 |virsh edit|修改虚拟机的配置|
 |virsh autostart|设置虚拟机自启动|
-|virsh domfsinfo|查看文件系统信息|
 |virsh dominfo|查看虚拟机摘要信息|
 |virsh domiflist|查看虚拟机网卡信息|
 |virsh domblklist|查看虚拟机硬盘信息|

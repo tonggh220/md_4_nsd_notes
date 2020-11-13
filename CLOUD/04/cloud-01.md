@@ -150,11 +150,13 @@ style U2 fill:#aa99ff
 ​     软件素材在云盘的 public/web_install 目录下
 
 ```shell
+[root@ecs-proxy ~]# mkdir -p web-site
+[root@ecs-proxy ~]# cd web-site
 [root@ecs-proxy ~]# vim /etc/ansible/ansible.cfg
 [defaults]
-inventory         = /etc/ansible/hosts
+inventory         = hostlist
 host_key_checking = False
-[root@ecs-proxy ~]# vim /etc/ansible/hosts
+[root@ecs-proxy ~]# vim hostlist
 [web]
 192.168.1.[11:13]
 [root@ecs-proxy ~]# vim web_install.yaml

@@ -42,8 +42,8 @@ style U fill:#ff99ff
 ```
 #### 优化系统服务
 ```shell
-[root@ecs-host ~]# systemctl stop postfix atd tuned
-[root@ecs-host ~]# yum remove -y postfix at audit tuned kexec-tools firewalld-*
+[root@ecs-proxy ~]# systemctl stop postfix atd tuned
+[root@ecs-proxy ~]# yum remove -y postfix at audit tuned kexec-tools firewalld-*
 [root@ecs-proxy ~]# vim /etc/cloud/cloud.cfg
 # manage_etc_hosts: localhost 注释掉这一行
 [root@ecs-proxy ~]# reboot

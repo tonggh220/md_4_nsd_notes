@@ -42,43 +42,24 @@ style U fill:#ff99ff
 ```
 #### 优化系统服务
 ```shell
-[root@ecs-proxy ~]# systemctl stop postfix
-[root@ecs-proxy ~]# yum remove -y postfix firewalld-*
-[root@ecs-proxy ~]# yum install chrony
-[root@ecs-proxy ~]# vim /etc/chrony.conf 
-# 注释掉 server 开头行，添加下面的配置
-server ntp.myhuaweicloud.com minpoll 4 maxpoll 10 iburst
-[root@ecs-proxy ~]# systemctl enable --now chronyd
-[root@ecs-proxy ~]# chronyc sources -v
-# 验证配置结果 ^* 代表成功
+[root@ecs-host ~]# systemctl stop postfix atd tuned
+[root@ecs-host ~]# yum remove -y postfix at audit tuned kexec-tools firewalld-*
 [root@ecs-proxy ~]# vim /etc/cloud/cloud.cfg
 # manage_etc_hosts: localhost 注释掉这一行
 [root@ecs-proxy ~]# reboot
 ```
 #### 安装配置ansible管理主机
 ```shell
-[root@ecs-proxy ~]# cp -a ansible_centos7 /var/ftp/localrepo/ansible
-[root@ecs-proxy ~]# cd /var/ftp/localrepo
-[root@ecs-proxy ~]# createrepo --update .
-[root@ecs-proxy ~]# vim /etc/yum.repos.d/local.repo 
-[local_repo]
-name=CentOS-$releasever – Localrepo
-baseurl=ftp://192.168.1.252/localrepo
-enabled=1
-gpgcheck=0
-[root@ecs-proxy ~]# yum makecache
-[root@ecs-proxy ~]# yum install -y ansible
-# 去华为云网页下载秘钥，并上传秘钥到跳板机
-[root@ecs-proxy ~]# mv luck.pem /root/.ssh/id_rsa
+[root@ecs-proxy ~]# tar zxf ansible_centos7.tar.gz
+[root@ecs-proxy ~]# yum install -y ansible_centos7/*.rpm
+[root@ecs-proxy ~]# ssh-keygen -t rsa -b 2048 -N '' -f /root/.ssh/id_rsa
 [root@ecs-proxy ~]# chmod 0400 /root/.ssh/id_rsa
+[root@ecs-proxy ~]# ssh-copy-id -i /root/.ssh/id_rsa 模板主机IP
 ```
 ## 模板镜像配置
 
-<font color=#ff0000>**购买云主机使用秘钥认证**</font>
-
 #### 配置yum源，安装软件包
 ```shell
-[root@ecs-host ~]# passwd root
 [root@ecs-host ~]# rm -rf /etc/yum.repos.d/*.repo
 [root@ecs-host ~]# curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.myhuaweicloud.com/repo/CentOS-Base-7.repo
 [root@ecs-host ~]# vim /etc/yum.repos.d/local.repo 
@@ -96,13 +77,6 @@ gpgcheck=0
 ```shell
 [root@ecs-host ~]# systemctl stop postfix atd tuned
 [root@ecs-host ~]# yum remove -y postfix at audit tuned kexec-tools firewalld-*
-[root@ecs-host ~]# yum install chrony
-[root@ecs-host ~]# vim /etc/chrony.conf 
-# 注释掉 server 开头行，添加下面的配置
-server ntp.myhuaweicloud.com minpoll 4 maxpoll 10 iburst
-[root@ecs-host ~]# systemctl enable --now chronyd
-[root@ecs-host ~]# chronyc sources -v
-# 验证配置结果 ^* 代表成功
 [root@ecs-host ~]# vim /etc/cloud/cloud.cfg
 # manage_etc_hosts: localhost 注释掉这一行
 [root@ecs-host ~]# yum clean all 

@@ -307,7 +307,7 @@ node-0003
 </configuration>
 ```
 
-6、配置 yare-site.xml
+6、配置 yarn-site.xml
 
 ```xml
 [root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/yarn-site.xml

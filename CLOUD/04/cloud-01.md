@@ -126,7 +126,7 @@ style U2 fill:#aa99ff
 ```shell
 [root@ecs-proxy ~]# mkdir -p web-site
 [root@ecs-proxy ~]# cd web-site
-[root@ecs-proxy ~]# vim /etc/ansible/ansible.cfg
+[root@ecs-proxy ~]# vim ansible.cfg
 [defaults]
 inventory         = hostlist
 host_key_checking = False

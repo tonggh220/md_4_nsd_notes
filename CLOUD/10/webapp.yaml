@@ -1,79 +1,100 @@
 ---
-apiVersion: v1
 kind: PersistentVolume
+apiVersion: v1
 metadata:
-  name:  pv-nfs
-  labels:
-    app: web-nfs
+  name: pv-nfs
 spec:
   volumeMode: Filesystem
   capacity:
     storage: 30Gi
   accessModes:
+  - ReadWriteOnce
+  - ReadOnlyMany
   - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   nfs:
-    path: /var/webroot
     server: 192.168.1.100
+    path: /var/webroot
+
 ---
-apiVersion: v1
 kind: PersistentVolumeClaim
+apiVersion: v1
 metadata:
   name: pvc-nfs
 spec:
   volumeMode: Filesystem
   accessModes:
-    - ReadWriteMany
+  - ReadWriteMany
   resources:
     requests:
-      storage: 20Gi
-  selector:
-    matchLabels:
-      app: web-nfs
+      storage: 25Gi
+
 ---
-apiVersion: apps/v1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
-  name: php-deploy
+  name: php-backend
 spec:
   selector:
     matchLabels:
-      app: myapp-php
-  replicas: 3
+      app: php-backend
+  replicas: 1
   template:
     metadata:
       labels:
-        app: myapp-php
+        app: php-backend
     spec:
       volumes:
-      - name: web-site
+      - name: website
         persistentVolumeClaim:
           claimName: pvc-nfs
       containers:
-      - name: php-fpm
+      - name: php
         image: 192.168.1.100:5000/myos:php-fpm
         ports:
         - protocol: TCP
           containerPort: 9000
         volumeMounts:
-        - name: web-site
+        - name: website
           mountPath: /usr/local/nginx/html
+        resources:
+          requests:
+            cpu: 200m
       restartPolicy: Always
+
 ---
-apiVersion: v1
-kind: Service
+kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v1
 metadata:
-  name: php-service
+  name: php-auto
+spec:
+  minReplicas: 1
+  maxReplicas: 5
+  scaleTargetRef:
+    kind: Deployment
+    apiVersion: apps/v1
+    name: php-backend
+  targetCPUUtilizationPercentage: 50
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: php-backend
 spec:
   ports:
   - protocol: TCP
     port: 9000
     targetPort: 9000
   selector:
-    app: myapp-php
+    app: php-backend
   type: ClusterIP
+
 ---
+kind: ConfigMap
 apiVersion: v1
+metadata:
+  name: nginx-conf
 data:
   nginx.conf: |2
 
@@ -142,9 +163,8 @@ data:
             #
             location ~ \.php$ {
                 root           html;
-                fastcgi_pass   php-service:9000;
+                fastcgi_pass   php-backend:9000;
                 fastcgi_index  index.php;
-            #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
                 include        fastcgi.conf;
             }
 
@@ -193,30 +213,27 @@ data:
         #}
 
     }
-kind: ConfigMap
-metadata:
-  name: nginx-conf
-  namespace: default
+
 ---
-apiVersion: apps/v1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
-  name: nginx-deploy
+  name: web-nginx
 spec:
   selector:
     matchLabels:
-      app: myapp-nginx
-  replicas: 5
+      app: nginx
+  replicas: 3
   template:
     metadata:
       labels:
-        app: myapp-nginx
+        app: nginx
     spec:
       volumes:
       - name: nginx-php
         configMap:
           name: nginx-conf
-      - name: web-site
+      - name: website
         persistentVolumeClaim:
           claimName: pvc-nfs
       containers:
@@ -229,30 +246,32 @@ spec:
         - name: nginx-php
           subPath: nginx.conf
           mountPath: /usr/local/nginx/conf/nginx.conf
-        - name: web-site
+        - name: website
           mountPath: /usr/local/nginx/html
       restartPolicy: Always
+
 ---
-apiVersion: v1
 kind: Service
+apiVersion: v1
 metadata:
-  name: nginx-service
+  name: web
 spec:
   ports:
   - protocol: TCP
     port: 80
     targetPort: 80
   selector:
-    app: myapp-nginx
+    app: nginx
   type: ClusterIP
+
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: myapp
+  name: my-web
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
   backend:
-    serviceName: nginx-service
+    serviceName: web
     servicePort: 80

@@ -102,7 +102,7 @@ M1 --> N3
 
 1、配置 hadoop-env.sh 参考 配置JAVA运行环境 案例
 
-2、配置slaves
+2、配置slaves (<font color=ff0000>~~localhost~~</font> 必须删除)
 
 ```shell
 [root@hadoop1 ~]# vim /usr/local/hadoop/etc/hadoop/slaves
